@@ -1,22 +1,22 @@
 
 #board { 
   empty-cells: show;
-  border-spacing: 1px;
+  border-spacing: 2px;
 }
 
 #board td { 
-  border: solid #ffffff 1px;
+  border: solid #ffffff 2px;
   width: 50px;
   height: 50px; 
 }
 
 #board .playable { 
-  border: solid  #ff0000 1px;
+  border: solid  #ff0000 2px;
 }
 
 #board .playable:hover { 
   cursor: pointer;
-  border: solid  #0000FF 1px;
+  border: solid  #0000FF 2px;
 }
 
 #board .empty { 

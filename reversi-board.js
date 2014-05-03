@@ -3,7 +3,7 @@
 
 function Board () {
     this.free_cells = 60;
-    this.current_player = "white";
+    this.current_player = "black";
     this.board = new Array();
 
     // small cache
@@ -26,6 +26,7 @@ function Board () {
         this.board[4][3] = "black";
     }
 
+	// 傳回當前玩家下一著手的集合 array [(x,y),(x,y),...]
     this.get_current_player_moves = function() {
         if (this.current_player == "white" && !this.white_moves)
             white_moves = this.get_moves(this.current_player);
@@ -37,30 +38,28 @@ function Board () {
     }
 
     // Retorna array de possiveis movimentos
+	// 傳回下一著手的集合 array [(x,y),(x,y),...]
     this.get_moves = function(player) {
         var moves = new Array();
-	for (var x = 0; x < 8; x++) {
-	    for (var y = 0; y < 8; y++) {
-		if (this.board[x][y] != "empty") continue;
-
-                var to_break = 0;
-                
-                for (var i = -1; i <= 1; i++) {
-                    for (var j = -1; j <= 1 ; j++) {
-			if (i == 0 && j == 0) continue;
-                        
-			var limit = board.get_limit(player, x, y, i, j);
-			if (limit && this.board[x+i][y+j] != player) {
-			    moves.push(new Array(x,y));
-                            to_break = 1;
+		for (var x = 0; x < 8; x++) {
+			for (var y = 0; y < 8; y++) {
+				if (this.board[x][y] != "empty") continue;
+				var to_break = 0;
+				for (var i = -1; i <= 1; i++) {
+					for (var j = -1; j <= 1 ; j++) {
+						if (i == 0 && j == 0) continue;
+						var limit = board.get_limit(player, x, y, i, j);
+						if (limit && this.board[x+i][y+j] != player) {
+							moves.push(new Array(x,y));
+							to_break = 1;
+						}
+						if (to_break) break;
+					}
+					if (to_break) break;
+				}
 			}
-                        if (to_break) break;
-		    }
-                    if (to_break) break;
 		}
-	    }
-	}
-	return moves;
+		return moves;
     }
 
     this._clone_board = function() {
@@ -76,23 +75,23 @@ function Board () {
     }
 
     this.update_move = function(player, frX, frY, toX, toY, iX, iY) {
-	var x = frX;
-	var y = frY;
-	var Lx = toX;
-	var Ly = toY;
-
-	while (x != Lx || y != Ly) {
-	    this.board[x][y] = player;
-	    x += iX;
-	    y += iY;
-	}
+		var x = frX;
+		var y = frY;
+		var Lx = toX;
+		var Ly = toY;
+	
+		while (x != Lx || y != Ly) {
+			this.board[x][y] = player;
+			x += iX;
+			y += iY;
+		}
     }
 
     this.make_move = function(moveX, moveY) {
-	var newBoard = new Board();
-	newBoard.set_board(this._clone_board());
-	newBoard.set_free_cells(this.get_free_cells() - 1);
-	newBoard.set_cell(moveX, moveY, this.get_current_player());
+		var newBoard = new Board();
+		newBoard.set_board(this._clone_board());
+		newBoard.set_free_cells(this.get_free_cells() - 1);
+		newBoard.set_cell(moveX, moveY, this.get_current_player());
 
         for (var i = -1; i <= 1; i++) {
             for (var j = -1; j <= 1; j++) {
@@ -110,7 +109,7 @@ function Board () {
         } else {
 	    newBoard.set_current_player("white");
         }
-	return newBoard;
+		return newBoard;
     }
 
     this.pass = function() {
@@ -123,14 +122,14 @@ function Board () {
 
     // retorna limite de x,y na direcao ix,iy
     this.get_limit = function(player, pX, pY, iX, iY) {
-	var x = pX + iX;
-	var y = pY + iY;
-	while (x >= 0 && y >= 0 && x < 8 && y < 8 && this.board[x][y] != "empty") {
-	    if (this.board[x][y] == player) return new Array(x, y);
-	    x += iX;
-	    y += iY;
-	}
-	return null;
+		var x = pX + iX;
+		var y = pY + iY;
+		while (x >= 0 && y >= 0 && x < 8 && y < 8 && this.board[x][y] != "empty") {
+			if (this.board[x][y] == player) return new Array(x, y);
+			x += iX;
+			y += iY;
+		}
+		return null;
     }
 
     // Accessors and setters
@@ -164,7 +163,7 @@ function Board () {
 
     this.is_game_over = function() {
         if (this.free_cells == 0) return true;
-	return false;
+		return false;
     }
 
     this.count = function(player) {

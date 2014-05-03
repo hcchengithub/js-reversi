@@ -43,6 +43,7 @@ function reversi_handle_game_over() {
     }
 }
 
+// 每個 cell 各有 HTML ID, 傳回某 cell 的 jQuery component object
 function reversi_cell(x, y) {
     return $("#" + x + "-" + y);
 }
