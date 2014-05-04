@@ -7,7 +7,6 @@
     <script type="text/javascript" src="jquery-1.8.3.min.js"></script>          
     <script type="text/javascript" src="reversi-board.js"></script>          
     <script type="text/javascript" src="reversi.js"></script>          
-    <script type="text/javascript" src="minimax.js"></script>          
     <script type="text/javascript">
       $(function() { reversi_initialize(); });
     </script>
@@ -16,7 +15,7 @@
     <h1>HTML Reversi</h1>
 
     <div id="debug">
-      Current Player: <span id="player">white</span>
+      Current Player: <span id="player">black</span> <!-- 原版 white 今改成 black, 持黑先 -->
       Free Cells: <span id="freecells"></span>
       Eval for white: <span id="whitescore"></span>
       Eval for black: <span id="blackscore"></span>

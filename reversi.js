@@ -1,4 +1,4 @@
-var board;
+﻿var board;
 
 function reversi_update() {
     reversi_render_table();
@@ -15,10 +15,10 @@ function reversi_initialize() {
 
     // for now, player is first
     reversi_update();
-    reversi_show_moves(board.get_current_player_moves());
+    reversi_show_moves(board.get_current_player_moves()); // 傳回先手下一可著位置的集合 array [(x,y),(x,y),...]
 }
 
-// �� HTML �e�ѽL
+// 用 HTML 畫棋盤
 function reversi_render_table_original() {
     var html = "";
     for (var i = 0; i < 8; i++) {
@@ -31,8 +31,8 @@ function reversi_render_table_original() {
     }
     $("#board").html(html);
 }
-// �[�W�y�Ъ�����
-var horizontalTitle = ['A','B','C','D','E','F','G','H'];
+// 加上座標的版本
+var a2h = ['A','B','C','D','E','F','G','H'];
 function reversi_render_table() {
     var html = "<tr>";
     html = html + "<td align=center><b></b></td>";
@@ -48,8 +48,8 @@ function reversi_render_table() {
     for (var i = 0; i < 8; i++) {
         html = html + "<tr><td align=center><b>" + (i+1) + "</b></td>";
         for (var j = 0; j < 8; j++) {
-            html = html + "<td id=\"" + i + "-" + j + "\" class=\"" + 
-                board.get_cell(j, i) + "\"></td>";
+            html = html + "<td align=center id=\"" + i + "-" + j + "\" class=\"" + 
+                board.get_cell(j, i) + "\">"+ a2h[j] + (i+1) +"</td>";
         }
         html = html + "</tr>";
     }
@@ -59,70 +59,39 @@ function reversi_render_table() {
 function reversi_handle_game_over() {
     var black_count = board.count("black");
     var white_count = board.count("white");
-    if (black_count > white_count) {
-        alert("I Won!!");
-    } else if (black_count < white_count) {
-        alert("You Won!!");
+    if (black_count < white_count) {
+        alert("White Win!!");
+    } else if (black_count > white_count) {
+        alert("Black Win!!");
     } else {
         alert("Call it a draw!");
     }
 }
 
-// �C�� cell �U�� HTML ID, �Ǧ^�Y cell �� jQuery component object
+// 每個 cell 各有 HTML ID, 傳回某 cell 的 jQuery component object
 function reversi_cell(x, y) {
     return $("#" + x + "-" + y);
 }
 
+// 改寫了，以取消人工智慧。
 function reversi_handle_play(x, y) {
     reversi_clean_moves();
     board = board.make_move(x, y);
-    
     reversi_update();
-
     if (board.is_game_over()) {
         reversi_handle_game_over();
-    }
-    else {
-
-        do {
-            var user_pass = 0;
-
-            var moves = board.get_current_player_moves();
-
-            var move = get_best_move(board, board.get_current_player(), 4);
-            if (move != null) {
-                board = board.make_move(move[0], move[1]);
-                reversi_update();
-
-                if (board.is_game_over()) {
-                    reversi_handle_game_over();
-                }           
-
-                else if (board.get_moves("white").length == 0) {
-                    alert("You need to pass!");
-                    board.pass();
-                    user_pass = 1;
-                } else {
-                    if (board.is_game_over()) {
-                        reversi_handle_game_over();
-                    }
-                    else {
-                        reversi_update();
-                        reversi_show_moves(board.get_current_player_moves());
-                    }
-                }
-            } else {
-                alert("I shall pass!");
-                board.pass();
-                moves = board.get_current_player_moves();
-                if (moves.length) {
-                    reversi_show_moves(moves);
-                } else {
-                    reversi_handle_game_over();
-                }
-            }
-        } while(user_pass);
-    }
+    }else{
+		var moves = board.get_current_player_moves(); // 傳回下一可著位置的集合 array [(x,y),(x,y),...]
+		if (moves.length==0) {
+			alert(board.current_player + " has nothing to do!"); // board.current_player
+			board.pass();
+			moves = board.get_current_player_moves();
+			if (moves.length==0) {
+				reversi_handle_game_over();
+			}
+		}
+		reversi_show_moves(moves);
+	}
 }
 
 function reversi_clean_moves() {

@@ -1,9 +1,9 @@
-/* from http://www.phpied.com/3-ways-to-define-a-javascript-class/ */
+ï»¿/* from http://www.phpied.com/3-ways-to-define-a-javascript-class/ */
 
 
 function Board () {
     this.free_cells = 60;
-    this.current_player = "black";
+    this.current_player = "black"; // åŸç‰ˆ white ä»Šæ”¹æˆ black, æŒé»‘å…ˆã€‚
     this.board = new Array();
 
     // small cache
@@ -26,7 +26,7 @@ function Board () {
         this.board[4][3] = "black";
     }
 
-	// ¶Ç¦^·í«eª±®a¤U¤@¥iµÛ¦ì¸mªº¶°¦X array [(x,y),(x,y),...]
+	// å‚³å›ç•¶å‰ç©å®¶ä¸‹ä¸€å¯è‘—ä½ç½®çš„é›†åˆ array [(x,y),(x,y),...]
     this.get_current_player_moves = function() {
         if (this.current_player == "white" && !this.white_moves)
             white_moves = this.get_moves(this.current_player);
@@ -38,7 +38,7 @@ function Board () {
     }
 
     // Retorna array de possiveis movimentos
-	// ¶Ç¦^¤U¤@µÛ¤âªº¶°¦X array [(x,y),(x,y),...]
+	// å‚³å›ä¸‹ä¸€è‘—æ‰‹çš„é›†åˆ array [(x,y),(x,y),...]
     this.get_moves = function(player) {
         var moves = new Array();
 		for (var x = 0; x < 8; x++) {
