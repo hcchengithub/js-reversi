@@ -18,10 +18,35 @@ function reversi_initialize() {
     reversi_show_moves(board.get_current_player_moves());
 }
 
-function reversi_render_table() {
+// 用 HTML 畫棋盤
+function reversi_render_table_original() {
     var html = "";
     for (var i = 0; i < 8; i++) {
         html = html + "<tr>";
+        for (var j = 0; j < 8; j++) {
+            html = html + "<td id=\"" + i + "-" + j + "\" class=\"" + 
+                board.get_cell(j, i) + "\"></td>";
+        }
+        html = html + "</tr>";
+    }
+    $("#board").html(html);
+}
+// 加上座標的版本
+var horizontalTitle = ['A','B','C','D','E','F','G','H'];
+function reversi_render_table() {
+    var html = "<tr>";
+    html = html + "<td align=center><b></b></td>";
+    html = html + "<td align=center><b>A</b></td>";
+    html = html + "<td align=center><b>B</b></td>";
+    html = html + "<td align=center><b>C</b></td>";
+    html = html + "<td align=center><b>D</b></td>";
+    html = html + "<td align=center><b>E</b></td>";
+    html = html + "<td align=center><b>F</b></td>";
+    html = html + "<td align=center><b>G</b></td>";
+    html = html + "<td align=center><b>H</b></td>";
+    html = html + "</tr>";
+    for (var i = 0; i < 8; i++) {
+        html = html + "<tr><td align=center><b>" + (i+1) + "</b></td>";
         for (var j = 0; j < 8; j++) {
             html = html + "<td id=\"" + i + "-" + j + "\" class=\"" + 
                 board.get_cell(j, i) + "\"></td>";

@@ -26,7 +26,7 @@ function Board () {
         this.board[4][3] = "black";
     }
 
-	// 傳回當前玩家下一著手的集合 array [(x,y),(x,y),...]
+	// 傳回當前玩家下一可著位置的集合 array [(x,y),(x,y),...]
     this.get_current_player_moves = function() {
         if (this.current_player == "white" && !this.white_moves)
             white_moves = this.get_moves(this.current_player);
