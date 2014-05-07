@@ -5,7 +5,8 @@ function Board () {
     this.free_cells = 60;
     this.current_player = "black"; // 原版 white 今改成 black, 持黑先。
     this.board = new Array();
-
+	this.history = []; // checksum/Position/Comment
+	
     // small cache
     this.white_moves = null;
     this.black_moves = null;
@@ -176,6 +177,25 @@ function Board () {
         return c;
     }
 
+	// 計算某方的 checksum, 每橫列8棋位，正好是一個 byte， j=0 就是 bit0。
+	// 整個盤面共8橫列，共8bytes，逐列加權 7 的列次方，以免同 pattern 在不同列的值重複。
+	// 通通加起來得該方的 checksum。
+    this.xSum = function(player) {
+        var c = 0;
+        for (var i = 0; i < 8; i++) {
+			var row =0;	
+            for (var j = 0; j < 8; j++) {
+                if (this.get_cell(i,j) == player) row += Math.pow(2,j);
+            }
+			c += row * Math.pow(7,i);
+        }
+        return c;
+    }
+	// Two sides' xSum combined by XOR (^) and then use mode (%) -- hcchen5600 2014/05/07 10:38:40 
+	this.checksum = function() {
+		return ((this.xSum('black') ^ this.xSum('white')) % 251); // 251 is a prime number
+	}
+	
     this.count_corner = function(player) {
         var corners = 0;
         if (this.board[0][0] == player) corners++;
@@ -184,7 +204,8 @@ function Board () {
         if (this.board[0][7] == player) corners++;
         return corners;
     }
-
+	/*
+	// Just do it! 動民主杯黑白棋賽 local 程式 不需要這個評分。 hcchen5600 2014/05/04 20:43:05 
     this.evaluate = function(player) {
 
         var other = (player == "white") ? "black" : "white" ;
@@ -216,4 +237,5 @@ function Board () {
         var moves = total ? my_moves.length * 400 / total : 0;
         return moves + pieces + corners;
     }
+	*/
 }

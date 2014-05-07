@@ -3,10 +3,17 @@
 function reversi_update() {
     reversi_render_table();
 
+  /*
     $("#freecells").text(board.get_free_cells());
     $("#player").text(board.get_current_player());
-    $("#whitescore").text(board.evaluate("white"));
-    $("#blackscore").text(board.evaluate("black"));
+	// Just do it! 動民主杯黑白棋賽 local 程式 不需要這個評分。 hcchen5600 2014/05/04 20:43:05 
+    // $("#whitescore").text(board.evaluate("white"));
+    // $("#blackscore").text(board.evaluate("black"));
+	// 評分改成顯示雙方目前子數。 hcchen5600 2014/05/04 20:57:25 
+    $("#whitecount").text(board.count("white"));
+    $("#blackcount").text(board.count("black"));
+    $("#checksum").text(board.checksum());
+  */
 }
 
 function reversi_initialize() {
@@ -35,7 +42,32 @@ function reversi_render_table_original() {
 var a2h = ['A','B','C','D','E','F','G','H'];
 function reversi_render_table() {
     var html = "<tr>";
-    html = html + "<td align=center><b></b></td>";
+	html = html + "<td align=center><b></b></td>";
+	if(board.get_current_player()=='black'){
+		html = html + "<td align=center class='black'></td>";
+		html = html + "<td align=center><b>"+ board.count("black") +"</b></td>";
+		html = html + "<td align=center></td>";
+		html = html + "<td align=center class='white'></td>";
+		html = html + "<td align=center><b>"+ board.count("white") +"</b></td>";
+	}else{
+		html = html + "<td align=center class='white'></td>";
+		html = html + "<td align=center><b>"+ board.count("white") +"</b></td>";
+		html = html + "<td align=center></td>";
+		html = html + "<td align=center class='black'></td>";
+		html = html + "<td align=center><b>"+ board.count("black") +"</b></td>";
+	}
+	html = html + "<td align=center></td>";
+	html = html + "<td align=center><b>Sum-Move</b></td>";
+	if(board.history.length){
+		var recentMove = board.history[board.history.length-1];
+		html = html + "<td align=center><b>"+ recentMove.checksum;
+		html = html + "-" + recentMove.x + recentMove.y;
+	}else{
+		html = html + "<td align=center><b>"+ board.checksum();
+	}
+	html = html + "</b></td>";
+	html = html + "</tr><tr>";
+    html = html + "<td align=center></td>";
     html = html + "<td align=center><b>A</b></td>";
     html = html + "<td align=center><b>B</b></td>";
     html = html + "<td align=center><b>C</b></td>";
@@ -77,6 +109,8 @@ function reversi_cell(x, y) {
 function reversi_handle_play(x, y) {
     reversi_clean_moves();
     board = board.make_move(x, y);
+	// Last move history - hcchen5600 2014/05/07 11:40:24 
+	board.history.push({checksum:board.checksum(),x:a2h[x],y:y+1}); // a2h[board.x]
     reversi_update();
     if (board.is_game_over()) {
         reversi_handle_game_over();
